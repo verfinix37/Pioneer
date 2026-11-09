@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pioneer-local-v3';
+const CACHE_NAME = 'pioneer-local-v4';
 const APP_SHELL = ['./','./index.html','./manifest.json','./icon.svg','./apple-touch-icon.png'];
 self.addEventListener('install', event => { event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', event => { event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key.startsWith('pioneer-') && key !== CACHE_NAME).map(key => caches.delete(key)))).then(() => self.clients.claim())); });
