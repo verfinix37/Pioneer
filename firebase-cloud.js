@@ -55,7 +55,27 @@
         status('Checking your cloud profile…','pending');
         await restoreOrCreate(user);
       });
-      const result=await state.auth.getRedirectResult().catch(()=>null);
+      let result;
+
+try {
+  result = await state.auth.getRedirectResult();
+} catch (error) {
+  console.error(
+    'PIONEER_REDIRECT_AUTH_ERROR:',
+    error.code,
+    error.message,
+    error
+  );
+
+  status(
+    `Google sign-in error: ${error.code || error.message}`,
+    'warn'
+  );
+}
+
+if (result?.user) {
+  show('Google account connected');
+}
       if (result?.user) show('Google account connected');
     } catch(e) {
       console.error('Pioneer cloud initialisation failed',e);
