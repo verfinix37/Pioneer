@@ -4,6 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0a0b0e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Pioneer">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
 <meta name="description" content="Pioneer — private RRB Station Master preparation dashboard">
 <link rel="manifest" href="./manifest.json">
 <title>Pioneer | RRB Station Master 2026</title>
@@ -18,7 +22,7 @@
 <div class="app">
 <header class="top"><div class="brand"><div class="logo">P</div><div><h1>PIONEER</h1><small>RRB STATION MASTER 2026 · PERSONAL COMMAND DECK</small></div></div><div class="topright"><span class="pill live">● LOCAL MODE ACTIVE</span><button class="btn ghost" id="backupTop">↧ Backup</button></div></header>
 <div class="layout">
-<aside class="sidebar"><div class="navlabel">COMMAND MENU</div><button class="navbtn active" data-view="home"><span class="navicon">⌂</span>Home</button><button class="navbtn" data-view="track"><span class="navicon">◷</span>Track</button><button class="navbtn" data-view="sprints"><span class="navicon">▥</span>Sprints</button><button class="navbtn" data-view="record"><span class="navicon">◴</span>Record</button><button class="navbtn" data-view="profile"><span class="navicon">◎</span>Profile</button><div class="sidefoot">PRIVATE WORKSPACE<br>Records stay in this browser.<br><span style="color:#10b981">● No cloud connection</span></div></aside>
+<aside class="sidebar"><div class="navlabel">COMMAND MENU</div><button class="navbtn active" data-view="home"><span class="navicon">⌂</span>Home</button><button class="navbtn" data-view="track"><span class="navicon">◷</span>Track</button><button class="navbtn" data-view="sprints"><span class="navicon">▥</span>Sprints</button><button class="navbtn" data-view="record"><span class="navicon">◴</span>Record</button><button class="navbtn" data-view="profile"><span class="navicon">◎</span>Profile</button><div class="sidefoot">PRIVATE WORKSPACE<br>Offline-first · Google cloud backup optional.<br><span style="color:#10b981">● Local data protected</span></div></aside>
 <main class="content">
 <section class="view active" id="home">
 <div class="heading"><div><div class="eyebrow">YOUR MISSION CONTROL</div><h2>Keep moving forward<span style="color:var(--amber)">.</span></h2><div class="sub">Every focused hour is another step towards the station master desk.</div></div><button class="btn" data-goto="record">＋ Log study hours</button></div>
@@ -53,7 +57,8 @@
 <div class="heading"><div><div class="eyebrow">YOUR PERSONAL SETTINGS</div><h2>Profile<span style="color:var(--amber)">.</span></h2><div class="sub">Profile stores only your name and age.</div></div></div>
 <div class="card"><div class="profilebox"><div class="avatar" id="avatar">P</div><div><h3 id="profileName" style="margin:0 0 4px">Your name</h3><div class="sub" id="profileAge">Age not set</div></div><button class="btn ghost" style="margin-left:auto" id="editProfile">Edit profile</button></div></div>
 <div class="card" style="margin-top:16px"><div class="cardhead"><h3>EXAM SETTINGS</h3></div><div class="formrow"><div class="field"><label>Expected CBT date</label><input type="date" id="examDate"></div><div class="field"><label>Target CBT score (out of 100)</label><input type="number" min="0" max="100" id="targetScore"></div></div><button class="btn" id="saveSettings">Save settings</button></div>
-<div class="card" style="margin-top:16px"><div class="cardhead"><h3>DATA & PRIVACY</h3><span class="tag current">LOCAL ONLY</span></div><p class="sub">Your records are stored in this browser only. They are not sent to GitHub. Export backups regularly. Clearing browser site data can erase your records.</p><div class="actions"><button class="btn" id="exportData">Export backup</button><button class="btn ghost" id="restoreData">Restore backup</button><button class="btn danger" id="resetData">Reset all data</button></div></div>
+<div class="card" style="margin-top:16px"><div class="cardhead"><h3>GOOGLE ACCOUNT & CLOUD BACKUP</h3><span class="tag current">OPTIONAL SYNC</span></div><p class="sub">Sign in with Google to keep a private cloud copy of your Pioneer progress. Records are still saved locally first, so you can continue offline. Sync resumes when internet returns.</p><div class="recordrow"><span>Account</span><strong id="cloudAccount">Not signed in</strong></div><div class="recordrow"><span>Sync status</span><strong id="cloudStatus" data-kind="neutral">Checking configuration…</strong></div><div class="actions" style="margin-top:14px"><button class="btn" id="googleSignIn">Continue with Google</button><button class="btn ghost" id="syncNow">Sync now</button><button class="btn ghost" id="googleSignOut" hidden>Sign out</button></div><p class="sub" style="margin-top:12px">Cloud sync requires your own Firebase project on the free Spark plan. Pioneer never requires a payment card or billing account. If the free quota is reached, cloud sync pauses; local use continues.</p></div>
+<div class="card" style="margin-top:16px"><div class="cardhead"><h3>DATA & PRIVACY</h3><span class="tag current">LOCAL + CLOUD</span></div><p class="sub">Your records are saved on this device and, when Google sync is enabled, in your private Firebase account space. Export backups occasionally as an extra safety measure. Clearing browser site data can erase the local copy.</p><div class="actions"><button class="btn" id="exportData">Export backup</button><button class="btn ghost" id="restoreData">Restore backup</button><button class="btn danger" id="resetData">Reset all data</button></div></div>
 </section>
 </main></div></div>
 <nav class="bottomnav"><button class="active" data-view="home"><span>⌂</span>Home</button><button data-view="track"><span>◷</span>Track</button><button data-view="sprints"><span>▥</span>Sprints</button><button data-view="record"><span>◴</span>Record</button><button data-view="profile"><span>◎</span>Profile</button></nav>
@@ -70,7 +75,8 @@ function loadData(){try{const raw=localStorage.getItem(STORAGE_KEY);if(raw){cons
 let data=loadData();
 const $=id=>document.getElementById(id);
 const escapeHTML=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function saveData(){localStorage.setItem(STORAGE_KEY,JSON.stringify(data));renderAll()}
+function saveData(){localStorage.setItem(STORAGE_KEY,JSON.stringify(data));renderAll();window.PioneerCloud?.queueSync()}
+window.PioneerApp={getData:()=>deep(data),replaceData:value=>{data={...defaultData(),...value,profile:{...defaultData().profile,...(value.profile||{})}};localStorage.setItem(STORAGE_KEY,JSON.stringify(data));renderAll()},notify};
 function notify(message){$('toast').textContent=message;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2300)}
 function dayDiff(from,to){const a=new Date(from+'T00:00:00'),b=new Date(to+'T00:00:00');return Math.round((b-a)/86400000)}
 function dateLabel(date){return date?new Date(date+'T00:00:00').toLocaleDateString(undefined,{day:'numeric',month:'short',year:'numeric'}):'—'}
@@ -111,4 +117,6 @@ window.addEventListener('resize',()=>{clearTimeout(window.__pioneerResize);windo
 renderAll();
 if('serviceWorker'in navigator&&location.protocol!=='file:'){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(error=>console.warn('Offline worker not registered',error)))}
 </script>
+<script src="./firebase-config.js"></script>
+<script src="./firebase-cloud.js"></script>
 </body></html>
