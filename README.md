@@ -2,6 +2,8 @@
 
 This build preserves the Pioneer dashboard and local-first data model. It adds optional Google sign-in and a private Firestore backup. The app continues to save to localStorage first; cloud sync is attempted in the background when the user is signed in and online.
 
+LINK : [PIONEER](https://verfinix37.github.io/Pioneer/)
+
 ## Cost guarantee setup
 
 Use **Firebase Spark (no-cost) only**. Do not link a Cloud Billing account and do not upgrade to Blaze. On Spark, Firebase does not charge you when Firestore's free quota is exceeded; the affected service is paused until the quota resets or the project is changed to a paid plan. Keep the project on Spark. Google sign-in is a no-cost Authentication provider. Current Firestore Standard free quota: 1 GiB stored, 50,000 document reads/day, 20,000 writes/day, 20,000 deletes/day, and 10 GiB/month outbound transfer. This small personal app should use far less under normal use, but Google can change quotas and terms.
