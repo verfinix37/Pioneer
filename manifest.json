@@ -1,23 +1,16 @@
 {
-  "name": "Pioneer \u2014 Private Study Command Centre",
+  "name": "Pioneer \u2014 RRB Station Master",
   "short_name": "Pioneer",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#070910",
-  "theme_color": "#070910",
+  "background_color": "#0a0b0e",
+  "theme_color": "#0a0b0e",
   "icons": [
     {
       "src": "icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any"
-    },
-    {
-      "src": "apple-touch-icon.png",
-      "sizes": "180x180",
-      "type": "image/png",
-      "purpose": "any"
     }
-  ],
-  "description": "Offline-first private RRB Station Master study tracker. Your data stays on this device."
+  ]
 }
